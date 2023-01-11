@@ -1,45 +1,45 @@
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TextInput,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, View, FlatList, Text, Button } from "react-native";
 import { useState } from "react";
+import QuoteItem from "./Components/QuoteItem";
+import QuoteInput from "./Components/QuoteInput";
 
-export default function App() {
-  const [enteredQuote, SetEnteredQuote] = useState("");
-
+export default function App(props) {
   const [quoteList, setQuoteList] = useState([]);
 
-  function quoteHandler(enteredText) {
-    SetEnteredQuote(enteredText);
+  function addQuote(enteredQuote) {
+    setQuoteList((prev) => [
+      ...prev,
+      { text: enteredQuote, id: Math.random().toString() },
+    ]);
   }
 
-  function addQuote() {
-    setQuoteList((prev) => [...prev, enteredQuote]);
+  function deleteItem(id) {
+    setQuoteList((prev) => {
+      return prev.filter((quotes) => quotes.id !== id);
+    });
   }
+
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Write Quote"
-          onChangeText={quoteHandler}
-        />
-        <Button title="Add" onPress={addQuote} />
-      </View>
+      <Text style={styles.myQuotes}>My Quote'🧾</Text>
+
+      <QuoteInput AddQuote={addQuote} />
 
       <View style={styles.yourQuotes}>
-        <ScrollView alwaysBounceVertical={false}>
-          {quoteList.map((QUOTE) => (
-            <View style={styles.quoteList} key={Math.random()}>
-              <Text>{QUOTE}</Text>
-            </View>
-          ))}
-        </ScrollView>
+        <FlatList
+          alwaysBounceVertical={false}
+          data={quoteList}
+          renderItem={(quoteObj) => {
+            return (
+              <QuoteItem
+                text={quoteObj.item.text}
+                delete={deleteItem}
+                id={quoteObj.item.id}
+              />
+            );
+          }}
+        />
       </View>
     </View>
   );
@@ -52,26 +52,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  inputContainer: {
-    flexDirection: "row",
-    flex: 1,
-
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 24,
-    borderBottomWidth: 2,
-    borderBottomColor: "skyblue",
-    borderRadius: 5,
-  },
-
-  textInput: {
-    borderWidth: 1,
-    borderColor: "grey",
-    width: "80%",
-    padding: 8,
-    marginRight: 8,
-  },
-
   yourQuotes: {
     marginRight: 8,
     padding: 8,
@@ -79,12 +59,8 @@ const styles = StyleSheet.create({
     flex: 4,
   },
 
-  quoteList: {
-    marginBottom: 5,
-    borderRadius: 10,
-    backgroundColor: "skyblue",
-
-    padding: 8,
-    color: "black",
+  myQuotes: {
+    flex: 0,
+    fontSize: 30,
   },
 });
