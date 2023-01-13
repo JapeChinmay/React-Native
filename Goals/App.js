@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, FlatList, Text, Button } from "react-native";
 import { useState } from "react";
 import QuoteItem from "./Components/QuoteItem";
@@ -22,7 +21,7 @@ export default function App(props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.myQuotes}>My Quote'🧾</Text>
+      <Text style={styles.myQuotes}>My Quote's🧾</Text>
 
       <QuoteInput AddQuote={addQuote} />
 
@@ -62,5 +61,7 @@ const styles = StyleSheet.create({
   myQuotes: {
     flex: 0,
     fontSize: 30,
+    border: 3,
+    borderBottomColor: "skyblue",
   },
 });
